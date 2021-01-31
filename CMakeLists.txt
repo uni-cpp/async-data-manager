@@ -38,11 +38,6 @@ target_link_libraries( ${PROJECT_NAME}
         uni-common
 )
 
-set_target_properties( ${PROJECT_NAME}
-    PROPERTIES
-    PUBLIC_HEADER "${HEADERS}"
-)
-
 if( CODE_COVERAGE )
     # Required by generate_coverage( )
     # Should be changed from _run to _test in the future
@@ -57,8 +52,7 @@ if( CODE_COVERAGE )
 endif( )
 
 install( TARGETS ${PROJECT_NAME}
-    ARCHIVE DESTINATION usr/lib
-    LIBRARY DESTINATION usr/lib
-    PUBLIC_HEADER DESTINATION usr/include
-    RUNTIME DESTINATION usr/bin
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
