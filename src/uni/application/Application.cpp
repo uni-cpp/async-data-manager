@@ -7,8 +7,9 @@
 
 #include "uni/application/Application.hpp"
 
-#include <unistd.h>
 #include <algorithm>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 namespace uni
 {
@@ -16,18 +17,24 @@ namespace application
 {
 Application::Application( const std::string& path_to_config )
 {
-    ( void ) path_to_config;
+    // Add error handling for ifstream and json parsing
 
-    // Data should be parsed from json to config struct
-    constexpr uint32_t GENERATORS_COUNT = 5U;
-    constexpr uint32_t BLOCKS_TOTAL = 1000U * GENERATORS_COUNT;
-    constexpr uint32_t BLOCK_SIZE_BYTES = 100000U;
-    constexpr uint32_t HASHERS_COUNT = 10U;
+    std::ifstream config_stream( path_to_config );
 
-    m_generators_count = GENERATORS_COUNT;
-    m_blocks_total = BLOCKS_TOTAL;
-    m_block_size_bytes = BLOCK_SIZE_BYTES;
-    m_hashers_count = HASHERS_COUNT;
+    const nlohmann::json::parser_callback_t CALLBACK{ nullptr };
+    const bool DISALLOW_EXCEPTIONS{ false };
+    const bool COMMENTS_IGNORED{ true };
+    const auto jf = nlohmann::json::parse( config_stream, CALLBACK, DISALLOW_EXCEPTIONS, COMMENTS_IGNORED );
+
+    if( !jf.is_object( ) )
+    {
+        return;
+    }
+
+    m_generators_count = jf[ "Generators" ];
+    m_blocks_total = jf[ "Blocks" ];
+    m_block_size_bytes = jf[ "Block_size_bytes" ];
+    m_hashers_count = jf[ "Hashers" ];
 
     std::cout << m_generators_count << " " << m_blocks_total << " " << m_block_size_bytes << " " << m_hashers_count << std::endl;
 }

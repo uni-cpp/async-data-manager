@@ -30,16 +30,26 @@ target_include_directories( ${PROJECT_NAME}
         ${SOURCE_DIR}/common/public
     PRIVATE
         ${SOURCE_DIR}/async-data-manager/src
+        ${SOURCE_DIR}/external/json/include
 )
 
 target_link_libraries( ${PROJECT_NAME}
     PRIVATE
         ${CMAKE_THREAD_LIBS_INIT}
         uni-common
+        json
+)
+
+# TODO Move it to /etc and resolve dependency from app
+configure_file( ${SOURCE_DIR}/async-data-manager/config/Config.json Config.json COPYONLY
 )
 
 install( TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install( FILES ${SOURCE_DIR}/async-data-manager/config/Config.json
+         DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

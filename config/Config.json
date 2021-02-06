@@ -1,0 +1,6 @@
+{
+    "Generators" : 5,
+    "Blocks" : 5000,
+    "Block_size_bytes" : 100000,
+    "Hashers" : 10
+}
