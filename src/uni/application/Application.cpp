@@ -54,7 +54,7 @@ Application::start_async_generators( )
         m_generators.emplace_back( std::make_unique< DataGenerator >( name, this, m_config.m_block_size_bytes ) );
         if( !m_generators.back( )->start( ) )
         {
-            // std::cout << m_generators.back( )->get_name( ) << " couldn't start." << std::endl;
+            LOG_ERROR_MSG( m_generators.back( )->get_name( ) );
             return false;
         }
     }
@@ -93,7 +93,7 @@ Application::on_block_generated( const std::string block )
         }
         else
         {
-            // std::cout << "Redundant block received. Ignored" << std::endl;
+            LOG_DEBUG_MSG( "Redundant block received. Ignored" );
         }
     }
 }
@@ -101,7 +101,7 @@ Application::on_block_generated( const std::string block )
 void
 Application::on_generation_finished( const std::string thread_name )
 {
-    // std::cout << "Thread name = " << thread_name << " have been finilized!" << std::endl;
+    LOG_INFO_MSG( "Thread name = ", thread_name, " have been finilized!" );
 }
 
 void
@@ -110,7 +110,7 @@ Application::on_block_hashing_finished( const std::string& hash )
     static size_t counter{ 0U };
     ++counter;
 
-    // std::cout << "Hash = " << hash << " counter = " << counter << std::endl;
+    LOG_INFO_MSG( "Hash = ", hash, " counter = ", counter );
 
     if( m_config.m_blocks_total == counter )
     {
@@ -125,7 +125,7 @@ Application::on_block_hashing_finished( const std::string& hash )
 void
 Application::on_job_finished( bool is_success )
 {
-    // std::cout << "Job finished with result = " << is_success << std::endl;
+    LOG_INFO_MSG( "Job finished with result = ", is_success );
 }
 
 void
@@ -138,14 +138,14 @@ Application::stop( )
             const auto is_success = generator->stop( );
             if( !is_success )
             {
-                // std::cout << generator->get_name( ) << "couldn't stop" << std::endl;
+                LOG_ERROR_MSG( generator->get_name( ), "couldn't stop" );
             }
         }
     }
 
     m_generators.clear( );
 
-    // std::cout << m_queue.size( ) << std::endl;
+    LOG_DEBUG_MSG( m_queue.size( ) );
 }
 
 }  // namespace application
