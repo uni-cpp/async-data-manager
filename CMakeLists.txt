@@ -8,6 +8,8 @@ set( SOURCES
     "app/main.cpp"
     "src/uni/application/Application.cpp"
     "src/uni/application/Application.hpp"
+    "src/uni/application/Config.hpp"
+    "src/uni/application/Config.cpp"
     "src/uni/application/DataGenerator.cpp"
     "src/uni/application/DataGenerator.hpp"
     "src/uni/application/DataGeneratorListener.hpp"
