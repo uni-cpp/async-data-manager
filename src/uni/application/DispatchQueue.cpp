@@ -7,6 +7,8 @@
 
 #include "uni/application/DispatchQueue.hpp"
 
+#include <uni/common/Log.hpp>
+
 namespace uni
 {
 namespace application

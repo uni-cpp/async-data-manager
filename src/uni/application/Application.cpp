@@ -2,14 +2,13 @@
 /// @file uni/application/Application.cpp
 /// @brief Implementation of Application class.
 /// @author Sergey Polyakov <white.irbys@gmail.com>
-/// @date 08.2020
+/// @date 2020-2021
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "uni/application/Application.hpp"
 #include <uni/common/Log.hpp>
 
 #include <algorithm>
-
 
 namespace uni
 {

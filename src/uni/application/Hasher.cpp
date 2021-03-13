@@ -7,7 +7,7 @@
 
 #include "uni/application/Hasher.hpp"
 
-#include <iostream>
+#include <uni/common/Log.hpp>
 
 namespace uni
 {
@@ -29,7 +29,7 @@ Hasher::~Hasher( )
 void
 Hasher::run( )
 {
-    std::cout << "-----===== Hasher::run(" << get_name( ) << ") =====-----" << std::endl;
+    LOG_INFO_MSG( "-----===== Hasher::run(", get_name( ), ") =====-----" );
 
     std::hash< std::string > hasher;
 

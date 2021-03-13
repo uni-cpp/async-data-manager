@@ -7,9 +7,10 @@
 
 #include "uni/application/DataGenerator.hpp"
 
+#include <uni/common/Log.hpp>
+
 #include <algorithm>
 #include <climits>
-#include <iostream>
 #include <random>
 
 namespace uni
@@ -37,7 +38,7 @@ DataGenerator::~DataGenerator( )
 void
 DataGenerator::run( )
 {
-    std::cout << "-----===== DataGenerator::run(" << get_name( ) << ") =====-----" << std::endl;
+    LOG_INFO_MSG( "-----===== DataGenerator::run(", get_name( ), ") =====-----" );
 
     random_engine random_engine;
     size_t block_number{ 0U };
@@ -48,7 +49,7 @@ DataGenerator::run( )
         std::generate( std::begin( block_data ), std::end( block_data ), std::ref( random_engine ) );
         if( m_listener != nullptr )
         {
-            std::cout << "Thread name = " << get_name( ) << ". Block id = " << block_number << &std::endl;
+            LOG_DEBUG_MSG( "Thread name = ", get_name( ), ". Block id = ", block_number );
             m_listener->on_block_generated( std::move( block_data ) );
         }
         ++block_number;
