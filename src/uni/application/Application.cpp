@@ -20,9 +20,7 @@
 #include <condition_variable>
 #include <vector>
 
-namespace uni
-{
-namespace application
+namespace uni::application
 {
 class Application::Impl
     : public DataGeneratorListener
@@ -30,27 +28,22 @@ class Application::Impl
 {
 public:
     explicit Impl( const std::string& path_to_config );
-    ~Impl( ) = default;
 
-public:
     ErrorCode run( );
 
-    // DataGeneratorListener
 private:
+    // DataGeneratorListener
     void on_block_generated( const std::string block ) override;
     void on_generation_finished( const std::string thread_name ) override;
 
     // HasherListener
-private:
     void on_block_hashing_finished( const std::string& hash ) override;
     void on_job_finished( bool is_success ) override;
 
-private:
-    ErrorCode start_async_generators( );
-    ErrorCode start_async_hashers( );
-    ErrorCode stop( );
+    auto start_async_generators( ) -> ErrorCode;
+    auto start_async_hashers( ) -> ErrorCode;
+    auto stop( ) -> ErrorCode;
 
-private:
     Config m_config{};
 
     std::mutex m_mutex_generator{};
@@ -247,5 +240,4 @@ Application::run( )
     return ErrorCode::NONE != error;
 }
 
-}  // namespace application
-}  // namespace uni
+}  // namespace uni::application
