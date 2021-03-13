@@ -16,6 +16,8 @@ namespace application
 void
 DispatchQueue::push( const std::string& new_element )
 {
+    LOG_TRACE_MSG( "" );
+
     std::lock_guard< std::mutex > lock( m_mutex );
     m_queue.push_back( new_element );
 }
@@ -23,6 +25,8 @@ DispatchQueue::push( const std::string& new_element )
 void
 DispatchQueue::push( std::string&& new_element )
 {
+    LOG_TRACE_MSG( "" );
+
     std::lock_guard< std::mutex > lock( m_mutex );
     m_queue.push_back( std::move( new_element ) );
 }
@@ -30,6 +34,8 @@ DispatchQueue::push( std::string&& new_element )
 bool
 DispatchQueue::pop_front( std::string& element_out )
 {
+    LOG_TRACE_MSG( "" );
+
     std::lock_guard< std::mutex > lock( m_mutex );
     if( m_queue.empty( ) )
     {
@@ -46,12 +52,16 @@ DispatchQueue::pop_front( std::string& element_out )
 bool
 DispatchQueue::empty( ) const
 {
+    LOG_TRACE_MSG( "" );
+
     return m_queue.empty( );
 }
 
 size_t
 DispatchQueue::size( ) const
 {
+    LOG_TRACE_MSG( "" );
+
     std::lock_guard< std::mutex > lock( m_mutex );
     size_t size = m_queue.size( );
 

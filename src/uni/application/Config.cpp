@@ -16,6 +16,8 @@ namespace application
 {
 Config::Config( const std::string& path_to_config )
 {
+    LOG_TRACE_MSG( "" );
+
     // Add error handling for ifstream and json parsing
 
     std::ifstream config_stream( path_to_config );
@@ -27,6 +29,7 @@ Config::Config( const std::string& path_to_config )
 
     if( !jf.is_object( ) )
     {
+        LOG_ERROR_MSG( "Error happened while config was parsing. Use default values." );
         return;
     }
 

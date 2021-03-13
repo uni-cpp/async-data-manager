@@ -18,10 +18,13 @@ Hasher::Hasher( const std::string& name, HasherListener* listener, DispatchQueue
     , m_listener{ listener }
     , m_queue{ queue }
 {
+    LOG_TRACE_MSG( "" );
 }
 
 Hasher::~Hasher( )
 {
+    LOG_TRACE_MSG( "" );
+
     m_is_working = false;
     m_listener = nullptr;
 }
@@ -29,7 +32,7 @@ Hasher::~Hasher( )
 void
 Hasher::run( )
 {
-    LOG_INFO_MSG( "-----===== Hasher::run(", get_name( ), ") =====-----" );
+    LOG_TRACE_MSG( "-----===== Hasher::run(", get_name( ), ") =====-----" );
 
     std::hash< std::string > hasher;
 
@@ -54,11 +57,14 @@ Hasher::run( )
 void
 Hasher::on_start( )
 {
+    LOG_TRACE_MSG( "" );
 }
 
 void
 Hasher::on_stop( )
 {
+    LOG_TRACE_MSG( "" );
+
     m_is_working = false;
 }
 

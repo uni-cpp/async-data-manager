@@ -27,10 +27,13 @@ DataGenerator::DataGenerator( const std::string& name, DataGeneratorListener* li
     , m_listener{ listener }
     , m_block_size_byte{ block_size_bytes }
 {
+    LOG_TRACE_MSG( "" );
 }
 
 DataGenerator::~DataGenerator( )
 {
+    LOG_TRACE_MSG( "" );
+
     m_is_working = false;
     m_listener = nullptr;
 }
@@ -38,7 +41,7 @@ DataGenerator::~DataGenerator( )
 void
 DataGenerator::run( )
 {
-    LOG_INFO_MSG( "-----===== DataGenerator::run(", get_name( ), ") =====-----" );
+    LOG_TRACE_MSG( "-----===== DataGenerator::run(", get_name( ), ") =====-----" );
 
     random_engine random_engine;
     size_t block_number{ 0U };
@@ -64,11 +67,14 @@ DataGenerator::run( )
 void
 DataGenerator::on_start( )
 {
+    LOG_TRACE_MSG( "" );
 }
 
 void
 DataGenerator::on_stop( )
 {
+    LOG_TRACE_MSG( "" );
+
     m_is_working = false;
 }
 

@@ -13,6 +13,7 @@
 #include "uni/application/DispatchQueue.hpp"
 #include "uni/application/Hasher.hpp"
 #include "uni/application/HasherListener.hpp"
+#include <uni/common/ErrorCode.hpp>
 
 #include <condition_variable>
 #include <vector>
@@ -27,26 +28,26 @@ class Application
 {
 public:
     explicit Application( const std::string& path_to_config );
-
     ~Application( ) = default;
 
 public:
-    bool run( );
+    ErrorCode run( );
 
+    // Listeners could be incapsulated in Impl
     // DataGeneratorListener
-protected:
+private:
     void on_block_generated( const std::string block ) override;
     void on_generation_finished( const std::string thread_name ) override;
 
     // HasherListener
-protected:
+private:
     void on_block_hashing_finished( const std::string& hash ) override;
     void on_job_finished( bool is_success ) override;
 
 private:
-    bool start_async_generators( );
-    bool start_async_hashers( );
-    void stop( );
+    ErrorCode start_async_generators( );
+    ErrorCode start_async_hashers( );
+    ErrorCode stop( );
 
 private:
     Config m_config{};
