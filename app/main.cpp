@@ -7,8 +7,8 @@
 
 #include <uni/application/Application.hpp>
 
-int
-main( int /*argc*/, char** /*argv*/ )
+auto
+main( int /*argc*/, char* * /*argv*/ ) -> int
 {
     int exit_code{ 0 };
 

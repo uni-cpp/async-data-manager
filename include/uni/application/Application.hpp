@@ -21,7 +21,7 @@ public:
     ~Application( );
 
 public:
-    bool run( );
+    auto run( ) -> bool;
 
 private:
     class Impl;

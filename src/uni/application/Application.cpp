@@ -29,7 +29,7 @@ class Application::Impl
 public:
     explicit Impl( const std::string& path_to_config );
 
-    ErrorCode run( );
+    auto run( ) -> ErrorCode;
 
 private:
     // DataGeneratorListener
@@ -63,8 +63,8 @@ Application::Impl::Impl( const std::string& path_to_config )
     LOG_TRACE_MSG( "" );
 }
 
-ErrorCode
-Application::Impl::run( )
+auto
+Application::Impl::run( ) -> ErrorCode
 {
     LOG_TRACE_MSG( "" );
 
@@ -92,8 +92,8 @@ Application::Impl::run( )
     return ErrorCode::NONE;
 }
 
-ErrorCode
-Application::Impl::start_async_generators( )
+auto
+Application::Impl::start_async_generators( ) -> ErrorCode
 {
     LOG_TRACE_MSG( "" );
 
@@ -119,8 +119,8 @@ Application::Impl::start_async_generators( )
     return ErrorCode::NONE;
 }
 
-ErrorCode
-Application::Impl::start_async_hashers( )
+auto
+Application::Impl::start_async_hashers( ) -> ErrorCode
 {
     LOG_TRACE_MSG( "" );
 
@@ -199,8 +199,8 @@ Application::Impl::on_job_finished( bool is_success )
     LOG_INFO_MSG( "Job finished with result = ", is_success );
 }
 
-ErrorCode
-Application::Impl::stop( )
+auto
+Application::Impl::stop( ) -> ErrorCode
 {
     LOG_TRACE_MSG( "" );
 
@@ -233,8 +233,8 @@ Application::Application( const std::string& path_to_config )
 // See additional info here - https://www.fluentcpp.com/2017/09/22/make-pimpl-using-unique_ptr/
 Application::~Application( ) = default;
 
-bool
-Application::run( )
+auto
+Application::run( ) -> bool
 {
     const auto error = m_impl->run( );
     return ErrorCode::NONE != error;
