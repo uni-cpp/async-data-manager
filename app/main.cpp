@@ -10,12 +10,10 @@
 int
 main( int /*argc*/, char** /*argv*/ )
 {
-    uni::common::set_current_thread_name( "Application" );
-
     int exit_code{ 0 };
 
     uni::application::Application app( "Config.json" );
-    if( uni::common::ErrorCode::NONE != app.run( ) )
+    if( !app.run( ) )
     {
         exit_code = 1;
     }

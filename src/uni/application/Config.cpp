@@ -33,12 +33,12 @@ Config::Config( const std::string& path_to_config )
         return;
     }
 
-    m_generators_count = jf[ "Generators" ];
-    m_blocks_total = jf[ "Blocks" ];
-    m_block_size_bytes = jf[ "Block_size_bytes" ];
-    m_hashers_count = jf[ "Hashers" ];
+    generators_count = jf[ "Generators" ];
+    blocks_count = jf[ "Blocks" ];
+    block_size_bytes = jf[ "Block_size_bytes" ];
+    hashers_count = jf[ "Hashers" ];
 
-    LOG_INFO_MSG( m_generators_count, m_blocks_total, m_block_size_bytes, m_hashers_count );
+    LOG_INFO_MSG( generators_count, blocks_count, block_size_bytes, hashers_count );
 }
 
 }  // namespace application

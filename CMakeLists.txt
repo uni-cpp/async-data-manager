@@ -1,13 +1,11 @@
 project( async-data-manager )
 
-set( HEADERS
-    ""
+set( HEADERS_static
+    "include/uni/application/Application.hpp"
 )
 
-set( SOURCES
-    "app/main.cpp"
+set( SOURCES_static
     "src/uni/application/Application.cpp"
-    "src/uni/application/Application.hpp"
     "src/uni/application/Config.hpp"
     "src/uni/application/Config.cpp"
     "src/uni/application/DataGenerator.cpp"
@@ -22,24 +20,63 @@ set( SOURCES
 
 # treat_all_warnings_as_errors()
 
+add_library( ${PROJECT_NAME}_static STATIC
+    ${HEADERS_static}
+    ${SOURCES_static}
+)
+
+target_include_directories( ${PROJECT_NAME}_static
+    PUBLIC
+        ${SOURCE_DIR}/async-data-manager/include
+    PRIVATE
+        ${SOURCE_DIR}/common/public
+        ${SOURCE_DIR}/async-data-manager/src
+        ${SOURCE_DIR}/external/json/include
+)
+
+target_link_libraries( ${PROJECT_NAME}_static
+    PRIVATE
+        ${CMAKE_THREAD_LIBS_INIT}
+        uni-common
+        json
+)
+
+install( TARGETS ${PROJECT_NAME}_static
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+# The trailing slash is important
+install( DIRECTORY ${CMAKE_INSTALL_INCLUDEDIR}/
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+######################################################
+
+set( HEADERS
+    ""
+)
+
+set( SOURCES
+    "app/main.cpp"
+)
+
+# treat_all_warnings_as_errors()
+
 add_executable( ${PROJECT_NAME}
     ${HEADERS}
     ${SOURCES}
 )
 
 target_include_directories( ${PROJECT_NAME}
-    PUBLIC
-        ${SOURCE_DIR}/common/public
     PRIVATE
-        ${SOURCE_DIR}/async-data-manager/src
-        ${SOURCE_DIR}/external/json/include
+        ${SOURCE_DIR}/async-data-manager/include
 )
 
 target_link_libraries( ${PROJECT_NAME}
     PRIVATE
-        ${CMAKE_THREAD_LIBS_INIT}
-        uni-common
-        json
+        ${PROJECT_NAME}_static
 )
 
 # TODO Move it to /etc and resolve dependency from app

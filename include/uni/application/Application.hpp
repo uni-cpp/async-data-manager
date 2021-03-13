@@ -1,30 +1,31 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @file uni/application/Config.hpp
-/// @brief Declaration Config class.
+/// @file uni/application/Application.hpp
+/// @brief Declaration application class.
 /// @author Sergey Polyakov <white.irbys@gmail.com>
-/// @date 2021
+/// @date 2020-2021
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
-#include <cstdint>
-#include <nlohmann/json.hpp>
+#include <memory>
+#include <string>
 
 namespace uni
 {
 namespace application
 {
-class Config
+class Application
 {
 public:
-    Config( ) = default;
-    explicit Config( const std::string& path_to_config );
+    explicit Application( const std::string& path_to_config );
+    ~Application( );
 
 public:
-    uint32_t generators_count{};
-    uint32_t blocks_count{};
-    uint32_t block_size_bytes{};
-    uint32_t hashers_count{};
+    bool run( );
+
+private:
+    class Impl;
+    std::unique_ptr< Impl > m_impl;
 };
 
 }  // namespace application

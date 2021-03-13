@@ -6,22 +6,72 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "uni/application/Application.hpp"
+
+#include "uni/application/Config.hpp"
+#include "uni/application/DataGenerator.hpp"
+#include "uni/application/DataGeneratorListener.hpp"
+#include "uni/application/DispatchQueue.hpp"
+#include "uni/application/Hasher.hpp"
+#include "uni/application/HasherListener.hpp"
+
+#include <uni/common/ErrorCode.hpp>
 #include <uni/common/Log.hpp>
 
-#include <algorithm>
+#include <condition_variable>
+#include <vector>
 
 namespace uni
 {
 namespace application
 {
-Application::Application( const std::string& path_to_config )
+class Application::Impl
+    : public DataGeneratorListener
+    , public HasherListener
+{
+public:
+    explicit Impl( const std::string& path_to_config );
+    ~Impl( ) = default;
+
+public:
+    ErrorCode run( );
+
+    // DataGeneratorListener
+private:
+    void on_block_generated( const std::string block ) override;
+    void on_generation_finished( const std::string thread_name ) override;
+
+    // HasherListener
+private:
+    void on_block_hashing_finished( const std::string& hash ) override;
+    void on_job_finished( bool is_success ) override;
+
+private:
+    ErrorCode start_async_generators( );
+    ErrorCode start_async_hashers( );
+    ErrorCode stop( );
+
+private:
+    Config m_config{};
+
+    std::mutex m_mutex_generator{};
+    bool m_is_job_done{ false };
+    DispatchQueue m_queue{};
+    std::vector< std::unique_ptr< DataGenerator > > m_generators{};
+
+    std::mutex m_mutex_hasher{};
+    std::condition_variable cv{};
+    std::unique_ptr< Hasher > m_hasher{};
+};
+
+
+Application::Impl::Impl( const std::string& path_to_config )
     : m_config{ path_to_config }
 {
     LOG_TRACE_MSG( "" );
 }
 
 ErrorCode
-Application::run( )
+Application::Impl::run( )
 {
     LOG_TRACE_MSG( "" );
 
@@ -50,15 +100,15 @@ Application::run( )
 }
 
 ErrorCode
-Application::start_async_generators( )
+Application::Impl::start_async_generators( )
 {
     LOG_TRACE_MSG( "" );
 
-    for( size_t generator_number = 0U; generator_number < m_config.m_generators_count; ++generator_number )
+    for( size_t generator_number = 0U; generator_number < m_config.generators_count; ++generator_number )
     {
         const std::string name{ "Generator №" + std::to_string( generator_number ) };
 
-        m_generators.emplace_back( std::make_unique< DataGenerator >( name, this, m_config.m_block_size_bytes ) );
+        m_generators.emplace_back( std::make_unique< DataGenerator >( name, this, m_config.block_size_bytes ) );
         if( !m_generators.back( ) )
         {
             LOG_ERROR_MSG( "Generator did not created - ", generator_number );
@@ -77,7 +127,7 @@ Application::start_async_generators( )
 }
 
 ErrorCode
-Application::start_async_hashers( )
+Application::Impl::start_async_hashers( )
 {
     LOG_TRACE_MSG( "" );
 
@@ -100,7 +150,7 @@ Application::start_async_hashers( )
 }
 
 void
-Application::on_block_generated( const std::string block )
+Application::Impl::on_block_generated( const std::string block )
 {
     LOG_TRACE_MSG( "" );
 
@@ -109,7 +159,7 @@ Application::on_block_generated( const std::string block )
     static size_t block_counter{ 0U };
     ++block_counter;
 
-    if( block_counter <= m_config.m_blocks_total )
+    if( block_counter <= m_config.blocks_count )
     {
         m_queue.push( block );
         return;
@@ -121,7 +171,7 @@ Application::on_block_generated( const std::string block )
 }
 
 void
-Application::on_generation_finished( const std::string thread_name )
+Application::Impl::on_generation_finished( const std::string thread_name )
 {
     LOG_TRACE_MSG( "" );
 
@@ -129,7 +179,7 @@ Application::on_generation_finished( const std::string thread_name )
 }
 
 void
-Application::on_block_hashing_finished( const std::string& hash )
+Application::Impl::on_block_hashing_finished( const std::string& hash )
 {
     LOG_TRACE_MSG( "" );
 
@@ -138,7 +188,7 @@ Application::on_block_hashing_finished( const std::string& hash )
 
     LOG_INFO_MSG( "Hash = ", hash, " counter = ", counter );
 
-    if( m_config.m_blocks_total == counter )
+    if( m_config.blocks_count == counter )
     {
         {
             std::unique_lock< std::mutex > lk( m_mutex_hasher );
@@ -149,7 +199,7 @@ Application::on_block_hashing_finished( const std::string& hash )
 }
 
 void
-Application::on_job_finished( bool is_success )
+Application::Impl::on_job_finished( bool is_success )
 {
     LOG_TRACE_MSG( "" );
 
@@ -157,7 +207,7 @@ Application::on_job_finished( bool is_success )
 }
 
 ErrorCode
-Application::stop( )
+Application::Impl::stop( )
 {
     LOG_TRACE_MSG( "" );
 
@@ -178,6 +228,23 @@ Application::stop( )
     LOG_DEBUG_MSG( m_queue.size( ) );
 
     return ErrorCode::NONE;
+}
+
+
+Application::Application( const std::string& path_to_config )
+{
+    m_impl = std::make_unique< Impl >( path_to_config );
+}
+
+// Destructor should be here.
+// See additional info here - https://www.fluentcpp.com/2017/09/22/make-pimpl-using-unique_ptr/
+Application::~Application( ) = default;
+
+bool
+Application::run( )
+{
+    const auto error = m_impl->run( );
+    return ErrorCode::NONE != error;
 }
 
 }  // namespace application
