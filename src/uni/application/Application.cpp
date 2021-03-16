@@ -227,6 +227,11 @@ Application::Impl::stop( ) -> ErrorCode
 Application::Application( const std::string& path_to_config )
 {
     m_impl = std::make_unique< Impl >( path_to_config );
+
+    if( !m_impl )
+    {
+        LOG_FATAL_MSG( "Application was not created" );
+    }
 }
 
 // Destructor should be here.
@@ -236,7 +241,10 @@ Application::~Application( ) = default;
 auto
 Application::run( ) -> bool
 {
+    REQUIRED( m_impl, "Empty pointer to impl", false );
+
     const auto error = m_impl->run( );
+
     return ErrorCode::NONE != error;
 }
 
