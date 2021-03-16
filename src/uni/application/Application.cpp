@@ -60,7 +60,7 @@ private:
 Application::Impl::Impl( const std::string& path_to_config )
     : m_config{ path_to_config }
 {
-    LOG_TRACE_MSG( "" );
+    LOG_TRACE_MSG( path_to_config );
 }
 
 auto
@@ -152,22 +152,18 @@ Application::Impl::on_block_generated( const std::string block )
     static size_t block_counter{ 0U };
     ++block_counter;
 
-    if( block_counter <= m_config.blocks_count )
-    {
-        m_queue.push( block );
-        return;
-    }
-    else
+    if( block_counter > m_config.blocks_count )
     {
         LOG_DEBUG_MSG( "Redundant block received. Ignored" );
+        return;
     }
+
+    m_queue.push( block );
 }
 
 void
 Application::Impl::on_generation_finished( const std::string thread_name )
 {
-    LOG_TRACE_MSG( "" );
-
     LOG_INFO_MSG( "Thread name = ", thread_name, " have been finilized!" );
 }
 
@@ -194,8 +190,6 @@ Application::Impl::on_block_hashing_finished( const std::string& hash )
 void
 Application::Impl::on_job_finished( bool is_success )
 {
-    LOG_TRACE_MSG( "" );
-
     LOG_INFO_MSG( "Job finished with result = ", is_success );
 }
 
