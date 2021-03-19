@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <nlohmann/json.hpp>
+#include <uni/common/Log.hpp>
 
 namespace uni
 {
@@ -25,6 +26,10 @@ public:
     uint32_t blocks_count{};
     uint32_t block_size_bytes{};
     uint32_t hashers_count{};
+
+private:
+    std::string temporary_member{ "test" };
+    LOG_CLASS( Config, LOG_IT( temporary_member ), LOG_IT( temporary_member ) );
 };
 
 }  // namespace application

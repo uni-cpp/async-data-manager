@@ -61,6 +61,8 @@ Application::Impl::Impl( const std::string& path_to_config )
     : m_config{ path_to_config }
 {
     LOG_TRACE_MSG( path_to_config );
+
+    LOG_DEBUG_MSG( LOG_IT( m_config ) );
 }
 
 auto
