@@ -23,7 +23,7 @@ using random_engine = std::independent_bits_engine< std::default_random_engine, 
 }  // anonymous namespace
 
 DataGenerator::DataGenerator( const std::string& name, DataGeneratorListener* listener, uint32_t block_size_bytes )
-    : Thread{ name }
+    : Thread{ { name } }
     , m_listener{ listener }
     , m_block_size_byte{ block_size_bytes }
 {

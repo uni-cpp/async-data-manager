@@ -14,7 +14,7 @@ namespace uni
 namespace application
 {
 Hasher::Hasher( const std::string& name, HasherListener* listener, DispatchQueue& queue )
-    : Thread{ name }
+    : Thread{ { name } }
     , m_listener{ listener }
     , m_queue{ queue }
 {
